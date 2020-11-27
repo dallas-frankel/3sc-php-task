@@ -71,9 +71,9 @@ class Directory implements DirectoryInterface
     }
   }
 
-  public function __construct($name, $parentDirectory){
+  public function __construct($name){
       $this->setName($name);
-      $this->setPath($parentDirectory);
+      
       $this->directories = (array) $this->directories;
       $this->files = (array) $this->files;
       //sets created date and time to currentTime
@@ -108,10 +108,12 @@ class Directory implements DirectoryInterface
   public function getDirectorySize(){
     $accumlatedSize = 0;
     for($i = 0; $i < count($this->files);$i++){
+      echo "Calling size on file";
       $accumlatedSize = $accumlatedSize + $this->files[$i]->getSize();        
     }
     //Recursive call going down the directory tree getting all the file sizes
     for($i = 0;$i < count($this->directories);$i++){
+      echo "Exploring dir " . $this->directories[$i]->getName();
       $accumlatedSize = $accumlatedSize + $this->directories[$i]->getDirectorySize();
     }
     return $accumlatedSize;
