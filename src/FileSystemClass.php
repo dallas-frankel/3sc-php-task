@@ -6,6 +6,11 @@ require_once('FileInterface.php');
 require_once('FileSystemInterface.php');
 class FileSystem implements FileSystemInterface
 {
+  private $rootDirectory;
+
+  public function getRootDirectory(){
+    return $this->rootDirectory;
+  }
 
   public function createFile(FileInterface $file, DirectoryInterface $parent){
     $parent->addToFiles($file);
@@ -20,23 +25,25 @@ class FileSystem implements FileSystemInterface
   }
 
   public function deleteFile(FileInterface $file){
-
+    $file->deleteFile();
   }
 
   public function createRootDirectory(DirectoryInterface $directory){
-
+    $this->rootDirectory = $directory;
   }
 
   public function createDirectory(DirectoryInterface $directory, DirectoryInterface $parent){
      //Checks if name will be a duplicate in that file system 
     if(!$parent->checkForNameInDirectories($directory->getName())){
+      //renames file if duplicate found
       $directory->setName($directory->getName() . "(1)");
     }
+    $parent->addChildDirectory($directory);
   }
 
  
   public function deleteDirectory(DirectoryInterface $directory){
-
+    $directory->deleteDirectory();
   }
 
   
@@ -56,7 +63,12 @@ class FileSystem implements FileSystemInterface
 
   
   public function getDirectorySize(DirectoryInterface $directory){
-   
+    $files = $directory->getFiles();
+    $accumlatedSize;
+    for($i = 0; $i < count($files);$i++){
+      $accumlatedSize = $accumlatedSize + $files[$i]->getSize();        
+    }
+    return $accumlatedSize();
   }
 
   
