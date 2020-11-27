@@ -28,7 +28,6 @@ class Directory implements DirectoryInterface
     return $this->directories;
   }
 
-
   //Adds directory to directories array
   public function addChildDirectory(DirectoryInterface $directory){
     array_push($directories,$directory);
@@ -46,7 +45,20 @@ class Directory implements DirectoryInterface
     }
   }
 
- 
+  public function __construct($name, $parentDirectory){
+    //Checks if name will be a duplicate
+    if($parentDirectory->checkForNameInDirectories($name) == false){
+      setName($name);
+      $this->parentDirectory = $parentDirectory;
+      $directories = array();
+      $files = array();
+
+      //sets created date and time to currentTime
+      setCreatedTime(date("l jS \of F Y h:i:s A"));
+    }else{
+      echo "Cannot have duplicate name in same directory";
+    } 
+  }
 
   
   //Checks if name appears in directories
