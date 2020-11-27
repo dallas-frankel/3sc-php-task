@@ -91,6 +91,15 @@ class Directory implements DirectoryInterface
     return false;
   }
 
+  public function checkForNameInFiles($name){
+    for($i = 0; $i < count($this->files);$i++){
+      if($this->files[$i] == $name){
+        return true;
+      } 
+    }
+    return false;
+  }
+
   
   public function deleteDirectory(){
     //deletes the child files
@@ -107,8 +116,9 @@ class Directory implements DirectoryInterface
 
   public function getDirectorySize(){
     $accumlatedSize = 0;
+    echo "File Count is " .count($this->files);
+    echo "Directory Count is " .count($this->directories);
     for($i = 0; $i < count($this->files);$i++){
-      echo "Calling size on file";
       $accumlatedSize = $accumlatedSize + $this->files[$i]->getSize();        
     }
     //Recursive call going down the directory tree getting all the file sizes

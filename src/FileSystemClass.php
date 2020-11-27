@@ -12,7 +12,12 @@ class FileSystem implements FileSystemInterface
     return $this->rootDirectory;
   }
 
+  //Interface Methods
+
   public function createFile(FileInterface $file, DirectoryInterface $parent){
+    if($parent->checkForNameInFiles($file->getName())){
+      $file->setName($file->getName() . "(1)");
+    }
     $parent->addToFiles($file);
   }
 
@@ -34,11 +39,12 @@ class FileSystem implements FileSystemInterface
 
   public function createDirectory(DirectoryInterface $directory, DirectoryInterface $parent){
      //Checks if name will be a duplicate in that file system 
-    if(!$parent->checkForNameInDirectories($directory->getName())){
+    if($parent->checkForNameInDirectories($directory->getName())){
       //renames file if duplicate found
       $directory->setName($directory->getName() . "(1)");
     }
-    $parent->addChildDirectory($directory);
+    //$parent->addChildDirectory($directory);
+    $directory->setPath($parent);
   }
 
  
@@ -63,12 +69,7 @@ class FileSystem implements FileSystemInterface
 
   
   public function getDirectorySize(DirectoryInterface $directory){
-    $files = $directory->getFiles();
-    $accumlatedSize;
-    for($i = 0; $i < count($files);$i++){
-      $accumlatedSize = $accumlatedSize + $files[$i]->getSize();        
-    }
-    return $accumlatedSize();
+    return $directory->getDirectorySize();
   }
 
   
@@ -77,6 +78,7 @@ class FileSystem implements FileSystemInterface
   }
 
   public function getFiles(DirectoryInterface $directory){
+  //  echo count($directory->getFiles());
     return $directory->getFiles();
   }
 }
