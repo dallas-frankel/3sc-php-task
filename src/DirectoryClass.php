@@ -82,8 +82,18 @@ class Directory implements DirectoryInterface
     return false;
   }
 
-  //removes directory from parrent directory array
+  
   public function deleteDirectory(){
+
+    //deletes the child files
+    for($i = 0; $i < count($files);$i++){
+      $files[$i]->deleteFile();
+    }
+    //deletes the child directories
+    for($i = 0; $i < count($directories);$i++){
+      $directories[$i]->deleteDirectory();
+    }
+    //removes directory from parrent directory array
     $parentDirectory->deleteChildDirectory($this);
   }
 
@@ -131,6 +141,6 @@ class Directory implements DirectoryInterface
 $topDir = new Directory("FirstFolder",null);
 $middleDir = new Directory("MiddleFolder",$topDir);
 $bottomDir = new Directory("LastFolder",$middleDir);
-echo $bottomDir->getPath();
+echo $bottomDir->getPachecth();
 
 ?>
