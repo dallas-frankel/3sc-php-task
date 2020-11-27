@@ -73,7 +73,7 @@ class Directory implements DirectoryInterface
 
   //removes directory from parrent directory array
   public function deleteDirectory(){
-    $parentDirectory->deleteChildDirectory();
+    $parentDirectory->deleteChildDirectory($this);
   }
 
 
