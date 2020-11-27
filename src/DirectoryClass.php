@@ -112,7 +112,8 @@ class Directory implements DirectoryInterface
   public function getPath(){
     return $this->path;
   }
-
+  
+  //Sets the path variable using parent directory (Will make it easy to move files around later)
   public function setPath($parentDirectory){
     $this->parentDirectory = $parentDirectory;
     $path = $this->getName();
