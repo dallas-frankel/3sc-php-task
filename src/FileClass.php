@@ -47,7 +47,7 @@ class File implements FileInterface {
 
 
     public function getSize(){
-        return $size;
+        return $this->size;
     }
 
     public function setSize($size){
@@ -82,8 +82,8 @@ class File implements FileInterface {
 }
 
 //For Testing
-$testObject = new File();
-$testObject->setName("Steve");
-$newName = $testObject->getName();
-echo $newName;
+//$testObject = new File();
+//$testObject->setName("Steve");
+//$newName = $testObject->getName();
+//echo $newName;
 ?>

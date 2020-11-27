@@ -25,7 +25,7 @@ class Directory implements DirectoryInterface
   }
 
   public function addToFiles(FileInterface $file){
-    array_push($files,$file);
+    array_push($this->files,$file);
   }
 
   //removes specific file from files array
@@ -106,14 +106,15 @@ class Directory implements DirectoryInterface
   }
 
   public function getDirectorySize(){
-    $accumlatedSize;
-    for($i = 0; $i < count($files);$i++){
-      $accumlatedSize = $accumlatedSize + $files[$i]->getSize();        
+    $accumlatedSize = 0;
+    for($i = 0; $i < count($this->files);$i++){
+      $accumlatedSize = $accumlatedSize + $this->files[$i]->getSize();        
     }
-    for($i = 0;$i < count($directories);$i++){
-      $accumlatedSize = $accumlatedSize + $directories[$i]->getDirectorySize();
+    //Recursive call going down the directory tree getting all the file sizes
+    for($i = 0;$i < count($this->directories);$i++){
+      $accumlatedSize = $accumlatedSize + $this->directories[$i]->getDirectorySize();
     }
-    return $accumlatedSize();
+    return $accumlatedSize;
   }
 
 
