@@ -16,6 +16,10 @@ class Directory implements DirectoryInterface
   private $files;
   private $directories;
 
+  public function getParentDirectory(){
+    return $this->parentDirectory;
+  }
+
   public function getFiles(){
     return $this->files;
   }
@@ -58,18 +62,13 @@ class Directory implements DirectoryInterface
   }
 
   public function __construct($name, $parentDirectory){
-    //Checks if name will be a duplicate
-    if($parentDirectory->checkForNameInDirectories($name) == false){
-      setName($name);
-      $this->parentDirectory = $parentDirectory;
+      $this->setName($name);
+      $this->setPath($parentDirectory);
       $directories = array();
       $files = array();
-
       //sets created date and time to currentTime
-      setCreatedTime(date("l jS \of F Y h:i:s A"));
-    }else{
-      echo "Cannot have duplicate name in same directory";
-    } 
+      $this->setCreatedTime(new \DateTime());
+    
   }
 
   
@@ -108,18 +107,29 @@ class Directory implements DirectoryInterface
     $this->createdTime = $created;
   }
 
+  private $path;
+
   public function getPath(){
-    return $this->$path;
+    return $this->path;
   }
 
-  public function setPath($path){
+  public function setPath($parentDirectory){
+    $this->parentDirectory = $parentDirectory;
+    $path = $this->getName();
+    $nextDir = $parentDirectory;
+    //Moves up the parents adding each name to the path until null(Root) directory is hit
+    while ($nextDir != null){
+      $path = $nextDir->getName() . '/' . $path;
+      $nextDir = $nextDir->getParentDirectory();
+    }
     $this->path = $path;
   }
 }
 
 //For Testing
-$testObject = new Directory();
-$testObject->setName("Steve");
-$newName = $testObject->getName();
-echo $newName;
+$topDir = new Directory("FirstFolder",null);
+$middleDir = new Directory("MiddleFolder",$topDir);
+$bottomDir = new Directory("LastFolder",$middleDir);
+echo $bottomDir->getPath();
+
 ?>
