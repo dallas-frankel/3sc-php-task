@@ -18,6 +18,20 @@ class File implements FileInterface {
         $parentDirectory->removeFile($this);
     }
 
+    public function __construct($name){
+        $this->setName($name);
+        //sets created date and time to currentTime
+        $this->setCreatedTime(new \DateTime());
+    }
+
+    public function getParentDirectory(){
+        return $parentDirectory;
+    }
+
+    public function setParentDirectory(DirectoryInterface $parent){
+        $this->parentDirectory = $parent;
+        return $this;
+    }
 
     //Interface Methods
 
@@ -57,16 +71,6 @@ class File implements FileInterface {
 
     public function setModifiedTime(DateTimeInterface $modified){
         $modifiedTime = $modified;
-        return $this;
-    }
-
-
-    public function getParentDirectory(){
-        return $parentDirectory;
-    }
-
-    public function setParentDirectory(DirectoryInterface $parent){
-        $parentDirectory = $parent;
         return $this;
     }
 
