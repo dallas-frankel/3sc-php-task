@@ -46,7 +46,7 @@ class Directory implements DirectoryInterface
 
   //Adds directory to directories array
   public function addChildDirectory(DirectoryInterface $directory){
-    array_push($directories,$directory);
+    array_push($this->directories,$directory);
   }
 
   //deletes specific directory from array
@@ -64,8 +64,8 @@ class Directory implements DirectoryInterface
   public function __construct($name, $parentDirectory){
       $this->setName($name);
       $this->setPath($parentDirectory);
-      $directories = array();
-      $files = array();
+      $this->directories = (array) $this->directories;
+      $this->files = (array) $this->files;
       //sets created date and time to currentTime
       $this->setCreatedTime(new \DateTime());
     
@@ -74,8 +74,8 @@ class Directory implements DirectoryInterface
   
   //Checks if name appears in directories
   public function checkForNameInDirectories($name){
-    for($i = 0; $i < count($directories);$i++){
-      if($directories[$i] == $name){
+    for($i = 0; $i < count($this->directories);$i++){
+      if($this->directories[$i] == $name){
         return true;
       } 
     }
@@ -84,7 +84,6 @@ class Directory implements DirectoryInterface
 
   
   public function deleteDirectory(){
-
     //deletes the child files
     for($i = 0; $i < count($files);$i++){
       $files[$i]->deleteFile();
@@ -125,7 +124,11 @@ class Directory implements DirectoryInterface
   
   //Sets the path variable using parent directory (Will make it easy to move files around later)
   public function setPath($parentDirectory){
+    //Maybe remove from parent here????????
     $this->parentDirectory = $parentDirectory;
+    if($parentDirectory != null){
+      $parentDirectory->addChildDirectory($this);
+    }
     $path = $this->getName();
     $nextDir = $parentDirectory;
     //Moves up the parents adding each name to the path until null(Root) directory is hit
@@ -141,6 +144,6 @@ class Directory implements DirectoryInterface
 $topDir = new Directory("FirstFolder",null);
 $middleDir = new Directory("MiddleFolder",$topDir);
 $bottomDir = new Directory("LastFolder",$middleDir);
-echo $bottomDir->getPachecth();
+echo $bottomDir->checkForNameInDirectories("LastFolder");
 
 ?>
