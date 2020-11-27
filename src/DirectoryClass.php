@@ -78,7 +78,6 @@ class Directory implements DirectoryInterface
       $this->files = (array) $this->files;
       //sets created date and time to currentTime
       $this->setCreatedTime(new \DateTime());
-    
   }
 
   
@@ -104,6 +103,17 @@ class Directory implements DirectoryInterface
     }
     //removes directory from parrent directory array
     $parentDirectory->deleteChildDirectory($this);
+  }
+
+  public function getDirectorySize(){
+    $accumlatedSize;
+    for($i = 0; $i < count($files);$i++){
+      $accumlatedSize = $accumlatedSize + $files[$i]->getSize();        
+    }
+    for($i = 0;$i < count($directories);$i++){
+      $accumlatedSize = $accumlatedSize + $directories[$i]->getDirectorySize();
+    }
+    return $accumlatedSize();
   }
 
 
