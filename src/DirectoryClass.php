@@ -60,6 +60,16 @@ class Directory implements DirectoryInterface
       echo "Problem with arrayKey";
     }
   }
+  public function deleteFile(FileInterface $file){
+    $arrayKey = array_search($file);
+    if($arrayKey != null){
+      unset($files[$arrayKey]);
+      //for testing
+      echo "File succesfully deleted";
+    }else{
+      echo "Problem with arrayKey";
+    }
+  }
 
   public function __construct($name, $parentDirectory){
       $this->setName($name);
