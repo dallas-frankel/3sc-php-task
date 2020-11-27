@@ -18,8 +18,9 @@ class File implements FileInterface {
         $parentDirectory->removeFile($this);
     }
 
-    public function __construct($name){
+    public function __construct($name,$size){
         $this->setName($name);
+        $this->setSize($size);
         //sets created date and time to currentTime
         $this->setCreatedTime(new \DateTime());
     }
