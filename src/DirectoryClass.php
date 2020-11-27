@@ -24,6 +24,18 @@ class Directory implements DirectoryInterface
     array_push($files,$file);
   }
 
+  //removes specific file from files array
+  public function removeFile(FileInterface $file){
+    $arrayKey = array_search($directory);
+    if($arrayKey != null){
+      unset($directories[$arrayKey]);
+      //for testing
+      echo "File succesfully removed";
+    }else{
+      echo "Problem with arrayKey";
+    }
+  }
+
   public function getChildrenDirectories(){
     return $this->directories;
   }

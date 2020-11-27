@@ -14,6 +14,12 @@ class File implements FileInterface {
     private $modifiedTime;
     private $parentDirectory;
 
+    public function deleteFile(){
+        $parentDirectory->removeFile();
+    }
+
+    //Interface Methods
+
     public function getName(){
         return $this->name;
     }
