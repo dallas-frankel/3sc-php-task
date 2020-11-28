@@ -74,6 +74,7 @@ class Directory implements DirectoryInterface
       echo "Problem with arrayKey";
     }
   }
+  
 
   public function __construct($name){
       $this->setName($name);

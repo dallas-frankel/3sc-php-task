@@ -11,14 +11,14 @@ $rootDirectory = new Directory("Root");
 $baseDirectory = new Directory("Folder1");
 $base2Directory = new Directory("Folder2");
 $baseChildDirectory = new Directory("baseChildDirectory");
-$baseChildFile = new File("Base1File",1);
+$baseChildFile = new File("File1",1);
 
 
 $fileSystem->createRootDirectory($rootDirectory);
 $fileSystem->createDirectory($baseDirectory,$rootDirectory);
 $fileSystem->createDirectory($base2Directory,$rootDirectory);
 //$fileSystem->createDirectory($baseChildDirectory,$baseDirectory);
-//$fileSystem->createFile($baseChildFile,$baseDirectory);
+$fileSystem->createFile($baseChildFile,$rootDirectory);
 //$fileSystem->createFile($baseChildFile,$baseDirectory);
 //$fileSystem->createFile($baseChildFile,$rootDirectory);
 //$fileSystem->createFile($baseChildFile,$base2Directory);
@@ -53,10 +53,10 @@ function menu(){
           }
           menu();
       case "back":
-        //back();
+        back();
       case "renamefile":
           if(count($wordArray) > 2){
-            //renameFile($wordArray[1]);
+            renameFile($wordArray[1],$wordArray[2]);
           }else{
             echo "\nPlease use command as 'renamefile <FileName> <NewFileName>'";
           }
@@ -68,7 +68,14 @@ function menu(){
             echo "\nPlease use command as 'renamedir <DirectoryName> <NewDirectoryName>'";
           }
           menu();
-      case "properties":
+      case "fileproperties":
+          if(count($wordArray) > 1){
+            //getproperties($wordArray[1]);
+          }else{
+            echo "\nPlease use command as 'properties <FileName>'";
+          }
+        menu();
+      case "directoryproperties":
           if(count($wordArray) > 1){
             //getproperties($wordArray[1]);
           }else{
@@ -82,7 +89,7 @@ function menu(){
           echo "\n'back'                                        : Go Up One DirectoryLevel";
           echo "\n'renamefile <FileName> <NewFileName>'         : Rename a File:";
           echo "\n'renamedir <DirectoryName> <NewDirectoryName>': Rename a Directory";
-          echo "\n'properties <FileName>'                       : Show File Properties";
+          echo "\n'fileproperties <FileName>'                   : Show File Properties";
           echo "\n'quit'                                        : StopExecution";    
           echo "\n'help'                                        : Get a list of commands";             
           menu();
@@ -100,7 +107,21 @@ function start($rootDirectory){
 
 function back(){
   global $currentDirectory;
-  $currentDirectory = $currentDirectory->getParentDirectory();
+  if($currentDirectory->getParentDirectory() != null){
+    $currentDirectory = $currentDirectory->getParentDirectory();
+  }else{
+    echo "Already at top directory";
+  }
+}
+
+function renameFile($fileName,$newFileName){
+  global $fileSystem;
+  $file = findFileWithName($fileName);
+  if($file != null){
+    $fileSystem->renameFile($file,$newFileName);
+  }else{
+    echo "File with this name doesn't exist in the current directory";
+  }
 }
 
 function changeDirectory($name){
@@ -114,20 +135,22 @@ function changeDirectory($name){
 }
 
 function findFileWithName($name){
-  $file;
+  global $currentDirectory;
+  global $fileSystem;
+  $myfile = null;
   for($i= 0; $i < count($fileSystem->getFiles($currentDirectory));$i++){
-    if($fileSystem->getFiles($currentDirectory)[$i]->getName() == $name){
-      $file = getFiles($currentDirectory)[$i]; 
+    if(strtolower($fileSystem->getFiles($currentDirectory)[$i]->getName()) == $name){
+      echo "file with name found";
+      $myfile = $fileSystem->getFiles($currentDirectory)[$i]; 
     }
   }
-  return $file;
+  return $myfile;
 }
 
 function findDirectoryWithName($name){
   global $currentDirectory;
   global $fileSystem;
   $directory;
-  
   for($i= 0; $i < count($fileSystem->getDirectories($currentDirectory));$i++){
     if(strtolower($fileSystem->getDirectories($currentDirectory)[$i]->getName()) == $name){
       $directory = $fileSystem->getDirectories($currentDirectory)[$i]; 
@@ -153,7 +176,7 @@ global $fileSystem;
 
   for($i = 0; $i < count($fileSystem->getFiles($currentDirectory));$i++){
     $line = $fileSystem->getFiles($currentDirectory)[$i]->getName();
-    echo "\n".$hello;
+    echo "\n " . $line;
   }
 }
 function listCurrentDirectories(){
@@ -161,9 +184,10 @@ function listCurrentDirectories(){
   global $fileSystem;
   for($i = 0; $i < count($fileSystem->getDirectories($currentDirectory));$i++){
     $line = $fileSystem->getDirectories($currentDirectory)[$i]->getName();
-    echo "\n".$line;
+    echo "\n ".$line;
   }
 }
-
+$currentDirectory = $rootDirectory;
+//findFileWithName("File1");
 start($rootDirectory);
 ?>

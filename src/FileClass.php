@@ -26,7 +26,7 @@ class File implements FileInterface {
     }
 
     public function getParentDirectory(){
-        return $parentDirectory;
+        return $this->parentDirectory;
     }
 
     public function setParentDirectory(DirectoryInterface $parent){
