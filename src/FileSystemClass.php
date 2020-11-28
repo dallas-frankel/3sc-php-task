@@ -11,7 +11,19 @@ class FileSystem implements FileSystemInterface
   public function getRootDirectory(){
     return $this->rootDirectory;
   }
+  
 
+  public function getFileSize($file){
+    return $file->getSize();
+  }
+
+  public function getFileCreationTime($file){
+    return $file->getCreatedTime();
+  }
+  
+  public function getFileModifiedTime($file){
+    return $file->getModifiedTime();
+  }
   
 
   //Interface Methods
