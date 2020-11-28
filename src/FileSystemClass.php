@@ -12,6 +12,8 @@ class FileSystem implements FileSystemInterface
     return $this->rootDirectory;
   }
 
+  
+
   //Interface Methods
 
   public function createFile(FileInterface $file, DirectoryInterface $parent){
@@ -26,6 +28,9 @@ class FileSystem implements FileSystemInterface
   }
 
   public function renameFile(FileInterface $file, $newName){
+    if(!$currentDirectory->checkForNameInFiles($newName)){
+      $newName = $newName . "(1)";
+    }
     $file->setName($newName);
   }
 
@@ -54,6 +59,10 @@ class FileSystem implements FileSystemInterface
 
   
   public function renameDirectory(DirectoryInterface $directory, $newName){
+    //checks if name already exists in parent directory and modifies if true
+    if(!$directory->parentDirectory->checkForNameInDirectories($newName)){
+      $newName = $newName . "(1)";
+    }
     $directory->setName($newName);
   }
 
