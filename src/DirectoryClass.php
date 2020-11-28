@@ -24,6 +24,10 @@ class Directory implements DirectoryInterface
     return $this->files;
   }
 
+  public function getDirectories(){
+    return $this->directories;
+  }
+
   public function addToFiles(FileInterface $file){
     array_push($this->files,$file);
   }
@@ -116,14 +120,11 @@ class Directory implements DirectoryInterface
 
   public function getDirectorySize(){
     $accumlatedSize = 0;
-    echo "File Count is " .count($this->files);
-    echo "Directory Count is " .count($this->directories);
     for($i = 0; $i < count($this->files);$i++){
       $accumlatedSize = $accumlatedSize + $this->files[$i]->getSize();        
     }
     //Recursive call going down the directory tree getting all the file sizes
     for($i = 0;$i < count($this->directories);$i++){
-      echo "Exploring dir " . $this->directories[$i]->getName();
       $accumlatedSize = $accumlatedSize + $this->directories[$i]->getDirectorySize();
     }
     return $accumlatedSize;

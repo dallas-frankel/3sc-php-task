@@ -51,7 +51,7 @@ class File implements FileInterface {
     }
 
     public function setSize($size){
-        $this -> $size = $size;
+        $this->size = $size;
         return $this;
     }
 
@@ -76,7 +76,7 @@ class File implements FileInterface {
     }
 
     public function getPath(){
-        return getParentDirectory() . "/" . getName();
+        return getParentDirectory()->getPath() . "/" . getName();
     }
 
 }
