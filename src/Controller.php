@@ -9,14 +9,14 @@ require_once('FileClass.php');
 $fileSystem = new FileSystem();
 $rootDirectory = new Directory("Root");
 $baseDirectory = new Directory("Folder1");
-$base2Directory = new Directory("base2Directory");
+$base2Directory = new Directory("Folder2");
 $baseChildDirectory = new Directory("baseChildDirectory");
 $baseChildFile = new File("Base1File",1);
 
 
 $fileSystem->createRootDirectory($rootDirectory);
 $fileSystem->createDirectory($baseDirectory,$rootDirectory);
-//$fileSystem->createDirectory($base2Directory,$rootDirectory);
+$fileSystem->createDirectory($base2Directory,$rootDirectory);
 //$fileSystem->createDirectory($baseChildDirectory,$baseDirectory);
 //$fileSystem->createFile($baseChildFile,$baseDirectory);
 //$fileSystem->createFile($baseChildFile,$baseDirectory);
@@ -33,7 +33,7 @@ $currentDirectory;
 
 
 function turnInputIntoWordArray($line){
-  return explode(" ", $line);
+  return explode(" ",strtolower($line));
 }
 
 
@@ -98,6 +98,11 @@ function start($rootDirectory){
   menu();
 }
 
+function back(){
+  global $currentDirectory;
+  $currentDirectory = $currentDirectory->getParentDirectory();
+}
+
 function changeDirectory($name){
   global $currentDirectory;
   $directory = findDirectoryWithName($name);
@@ -122,8 +127,9 @@ function findDirectoryWithName($name){
   global $currentDirectory;
   global $fileSystem;
   $directory;
+  
   for($i= 0; $i < count($fileSystem->getDirectories($currentDirectory));$i++){
-    if($fileSystem->getDirectories($currentDirectory)[$i]->getName() == $name){
+    if(strtolower($fileSystem->getDirectories($currentDirectory)[$i]->getName()) == $name){
       $directory = $fileSystem->getDirectories($currentDirectory)[$i]; 
     }
   }
