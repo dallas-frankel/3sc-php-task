@@ -36,9 +36,12 @@ class FileSystemClassTest{
             echo "testCreateDirectory Failed!";
             $bool = false;
         }
-
         if(!$this->testDeleteDirectory()){
             echo "testDeleteDirectory Failed!";
+            $bool = false;
+        }
+        if(!$this->testRenameDirectory()){
+            echo "testRenameDirectory Failed!";
             $bool = false;
         }
 
@@ -116,6 +119,19 @@ class FileSystemClassTest{
             }
         }
         return false;
+      }
+
+      public function testRenameDirectory(){
+        $testDirectory2 = new Directory("BottomFolder");
+        $testDirectory = new Directory("BottomFolder");
+        $fileSystem = new FileSystem();
+        $fileSystem->createDirectory($testDirectory2,$testDirectory);
+        $fileSystem->renameDirectory($testDirectory,"TopFolder");
+        if($testDirectory->getName() == "TopFolder"){
+            return true;
+        }else{
+            return false;
+        }
       }
     
     
