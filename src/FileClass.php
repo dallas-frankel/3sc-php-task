@@ -15,7 +15,8 @@ class File implements FileInterface {
     private $parentDirectory;
 
     public function deleteFile(){
-        $parentDirectory->removeFile($this);
+        $this->parentDirectory->removeFile($this);
+        $this->parentDirectory = null;
     }
 
     public function __construct($name,$size){

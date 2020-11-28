@@ -34,11 +34,10 @@ class Directory implements DirectoryInterface
 
   //removes specific file from files array
   public function removeFile(FileInterface $file){
-    $arrayKey = array_search($directory);
-    if($arrayKey != null){
-      unset($directories[$arrayKey]);
-      //for testing
-      echo "File succesfully removed";
+    $arrayKey = array_search($file,$this->files);
+    if($arrayKey != null || $arrayKey == 0){
+      unset($this->files[$arrayKey]);
+      $this->files = array_values($this->files);
     }else{
       echo "Problem with arrayKey";
     }
@@ -55,11 +54,10 @@ class Directory implements DirectoryInterface
 
   //deletes specific directory from array
   public function deleteChildDirectory(DirectoryInterface $directory){
-    $arrayKey = array_search($directory);
-    if($arrayKey != null){
-      unset($directories[$arrayKey]);
-      //for testing
-      echo "Directory succesfully deleted";
+    $arrayKey = array_search($directory,$this->directories);
+    if($arrayKey != null || $arrayKey == 0){
+      unset($this->directories[$arrayKey]);
+      $this->directories = array_values($this->directories);
     }else{
       echo "Problem with arrayKey";
     }
@@ -69,7 +67,6 @@ class Directory implements DirectoryInterface
     if($arrayKey != null){
       unset($files[$arrayKey]);
       //for testing
-      echo "File succesfully deleted";
     }else{
       echo "Problem with arrayKey";
     }
@@ -107,16 +104,18 @@ class Directory implements DirectoryInterface
 
   
   public function deleteDirectory(){
+    
     //deletes the child files
-    for($i = 0; $i < count($files);$i++){
-      $files[$i]->deleteFile();
+    for($i = 0; $i < count($this->files);$i++){
+      $this->files[$i]->deleteFile();
     }
     //deletes the child directories
-    for($i = 0; $i < count($directories);$i++){
-      $directories[$i]->deleteDirectory();
+    for($i = 0; $i < count($this->directories);$i++){
+      $this->directories[$i]->deleteDirectory();
     }
     //removes directory from parrent directory array
-    $parentDirectory->deleteChildDirectory($this);
+    $this->parentDirectory->deleteChildDirectory($this);
+    $this->parentDirectory = null;
   }
 
   public function getDirectorySize(){

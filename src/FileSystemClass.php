@@ -12,7 +12,6 @@ class FileSystem implements FileSystemInterface
     return $this->rootDirectory;
   }
 
-
   public function getFileSize($file){
     return $file->getSize();
   }
@@ -41,8 +40,10 @@ class FileSystem implements FileSystemInterface
   }
 
   public function renameFile(FileInterface $file, $newName){
-    if($file->getParentDirectory()->checkForNameInFiles($newName)){
-      $newName = $newName . "(1)";
+    if($file->getParentDirectory() != null){
+      if($file->getParentDirectory()->checkForNameInFiles($newName)){
+        $newName = $newName . "(1)";
+     }
     }
     $file->setName($newName);
   }
