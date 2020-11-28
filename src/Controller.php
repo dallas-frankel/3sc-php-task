@@ -33,14 +33,13 @@ $currentDirectory;
 
 
 function turnInputIntoWordArray($line){
-  $array = array($line);
-  return $array;
+  return explode(" ", $line);
 }
 
 
 function menu(){
   printDirectoryContents();
-  echo "\nPlease enter a command (Type 'help' for a list of commands)";
+  echo "\nPlease enter a command (Type 'help' for a list of commands): ";
   $handle = fopen ("php://stdin","r");
   $line = fgets($handle);
   $wordArray = turnInputIntoWordArray(trim($line));
@@ -48,7 +47,7 @@ function menu(){
     switch ($wordArray[0]) {
       case "cd":
           if(count($wordArray) > 1){
-            //changeDirectory($wordArray[1]);
+            changeDirectory($wordArray[1]);
           }else{
             echo "\nPlease use command as 'cd <DirectoryName>'";
           }
@@ -97,6 +96,38 @@ function start($rootDirectory){
   global $currentDirectory;
   $currentDirectory = $rootDirectory;
   menu();
+}
+
+function changeDirectory($name){
+  global $currentDirectory;
+  $directory = findDirectoryWithName($name);
+  if($directory != null){
+    $currentDirectory = $directory;
+  }else{
+    echo "Directory not found in current directory";
+  }
+}
+
+function findFileWithName($name){
+  $file;
+  for($i= 0; $i < count($fileSystem->getFiles($currentDirectory));$i++){
+    if($fileSystem->getFiles($currentDirectory)[$i]->getName() == $name){
+      $file = getFiles($currentDirectory)[$i]; 
+    }
+  }
+  return $file;
+}
+
+function findDirectoryWithName($name){
+  global $currentDirectory;
+  global $fileSystem;
+  $directory;
+  for($i= 0; $i < count($fileSystem->getDirectories($currentDirectory));$i++){
+    if($fileSystem->getDirectories($currentDirectory)[$i]->getName() == $name){
+      $directory = $fileSystem->getDirectories($currentDirectory)[$i]; 
+    }
+  }
+  return $directory;
 }
 
 
