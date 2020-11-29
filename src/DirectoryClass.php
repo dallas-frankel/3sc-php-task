@@ -143,7 +143,7 @@ class Directory implements DirectoryInterface
   }
 
   public function getCreatedTime(){
-    return $this->$createdTime;
+    return $this->createdTime->format('Y-m-d H:i:s');
   }
 
   public function setCreatedTime(DateTimeInterface $created){

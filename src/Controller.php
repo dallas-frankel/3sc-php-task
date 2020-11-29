@@ -78,7 +78,7 @@ function menu(){
         menu();
       case "directoryproperties":
           if(count($wordArray) > 1){
-            //getproperties($wordArray[1]);
+            directoryproperties($wordArray[1]);
           }else{
             echo "\nPlease use command as 'properties <FileName>'";
           }
@@ -91,6 +91,9 @@ function menu(){
           echo "\n'renamefile <FileName> <NewFileName>'         : Rename a File";
           echo "\n'renamedir <DirectoryName> <NewDirectoryName>': Rename a Directory";
           echo "\n'fileproperties <FileName>'                   : Show File Properties";
+          echo "\n'directoryproperties <DirectoryName>'         : Show Directory Properties";
+          echo "\n'deletefile <FileName>'                       : Show File Properties";
+          echo "\n'deletedirectory <DirectoryName>'             : Show Directory Properties";
           echo "\n'quit'                                        : Stop Execution";    
           echo "\n'help'                                        : Get a list of commands";             
           menu();
@@ -132,6 +135,22 @@ function fileProperties($fileName){
     echo "File with this name doesn't exist in the current directory";
   }
 }
+
+function directoryProperties($directoryName){
+  global $fileSystem;
+  $directory = findDirectoryWithName($directoryName);
+  if($directory != null){
+    echo "------";
+    echo "\nDirectory Properties for " . $directoryName;
+    echo "\nPath: " . $directory->getPath();
+    echo "\nSize: " . $fileSystem->getDirectorySize($directory);
+    echo "\nCreatedTime: " . $directory->getCreatedTime();
+    echo "\n------";
+  }else{
+    echo "File with this name doesn't exist in the current directory";
+  }
+}
+
 function deleteFile($fileName){
   global $fileSystem;
   $file = findFileWithName($fileName);
