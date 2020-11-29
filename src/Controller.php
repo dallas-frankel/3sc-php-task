@@ -83,6 +83,20 @@ function menu(){
             echo "\nPlease use command as 'properties <FileName>'";
           }
         menu();
+      case "deletefile":
+          if(count($wordArray) > 1){
+            deleteFile($wordArray[1]);
+          }else{
+            echo "\nPlease use command as 'properties <FileName>'";
+          }
+        menu();
+      case "deletedirectory":
+          if(count($wordArray) > 1){
+            deleteDirectory($wordArray[1]);
+          }else{
+            echo "\nPlease use command as 'properties <FileName>'";
+          }
+        menu();
       case "quit":
         exit;
       case "help":
@@ -105,6 +119,7 @@ function menu(){
   fclose($handle);
   echo "Quitting";
 }
+
 
 function start($rootDirectory){
   global $currentDirectory;
@@ -146,6 +161,16 @@ function directoryProperties($directoryName){
     echo "\nSize: " . $fileSystem->getDirectorySize($directory);
     echo "\nCreatedTime: " . $directory->getCreatedTime();
     echo "\n------";
+  }else{
+    echo "File with this name doesn't exist in the current directory";
+  }
+}
+
+function deleteDirectory($directoryName){
+  global $fileSystem;
+  $directory = findDirectoryWithName($directoryName);
+  if($directory != null){
+    $fileSystem->deleteDirectory($directory);
   }else{
     echo "File with this name doesn't exist in the current directory";
   }
