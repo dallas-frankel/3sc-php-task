@@ -31,9 +31,8 @@ $fileSystem->createFile($baseChildFile,$rootDirectory);
 
 $currentDirectory;
 
-
+//Removes all spaces and adds each work into the array
 function turnInputIntoWordArray($line){
-  //Removes all spaces and adds each work into the array
   return explode(" ",strtolower($line));
 }
 
@@ -54,7 +53,7 @@ function menu(){
           }
           menu();
       case "moveup":
-        back();
+        moveup();
       case "renamefile":
           if(count($wordArray) > 2){
             renameFile($wordArray[1],$wordArray[2]);
@@ -97,6 +96,20 @@ function menu(){
             echo "\nPlease use command as 'properties <FileName>'";
           }
         menu();
+      case "viewfile":
+        if(count($wordArray) > 1){
+          viewFile($wordArray[1]);
+        }else{
+          echo "\nPlease use command as 'properties <FileName>'";
+        }
+        menu();
+      case "changefileref":
+        if(count($wordArray) > 2){
+           changeFileRef($wordArray[1],$wordArray[2]);
+        }else{
+          echo "\nPlease use command as 'properties <FileName>'";
+        }
+          menu();
       case "quit":
         exit;
       case "help":
@@ -106,8 +119,9 @@ function menu(){
           echo "\n'renamedir <DirectoryName> <NewDirectoryName>': Rename a Directory";
           echo "\n'fileproperties <FileName>'                   : Show File Properties";
           echo "\n'directoryproperties <DirectoryName>'         : Show Directory Properties";
-          echo "\n'deletefile <FileName>'                       : Show File Properties";
-          echo "\n'deletedirectory <DirectoryName>'             : Show Directory Properties";
+          echo "\n'deletefile <FileName>'                       : Deletes a File";
+          echo "\n'deletedirectory <DirectoryName>'             : Deletes a Directory";
+          echo "\n'changefileref <FileName> <LocalFilePath>'    : Changes the Gif associated with the file";
           echo "\n'quit'                                        : Stop Execution";    
           echo "\n'help'                                        : Get a list of commands";             
           menu();
@@ -127,7 +141,29 @@ function start($rootDirectory){
   menu();
 }
 
-function back(){
+//Opens the file in browser
+function viewFile($fileName){
+  global $fileSystem;
+  $file = findFileWithName($fileName);
+  if($file != null){
+    $fileSystem->viewFile($file);
+  }else{
+    echo "File with this name doesn't exist in the current directory";
+  }
+}
+
+function changeFileRef($fileName,$newPath){
+  global $fileSystem;
+  $file = findFileWithName($fileName);
+  if($file != null){
+    $fileSystem->changeFileRef($file,$newPath);
+  }else{
+    echo "File with this name doesn't exist in the current directory";
+  }
+}
+
+//Moves up one level directory
+function moveup(){
   global $currentDirectory;
   if($currentDirectory->getParentDirectory() != null){
     $currentDirectory = $currentDirectory->getParentDirectory();
@@ -135,6 +171,8 @@ function back(){
     echo "Already at top directory";
   }
 }
+
+//Displays the file properties
 function fileProperties($fileName){
   global $fileSystem;
   $file = findFileWithName($fileName);

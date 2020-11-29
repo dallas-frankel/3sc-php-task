@@ -27,6 +27,18 @@ class FileSystem implements FileSystemInterface
   public function getFilePath($file){
     return $file->getPath();
   }
+
+  public function viewFile($file){
+    $file->viewGif();
+  }
+
+  public function changeFileRef($file,$path){
+    if(file_exists($path)){
+      $file->setGifRefrence($path);
+    }else{
+      echo "This path does not exist";
+    }
+  }
   
 
   //Interface Methods

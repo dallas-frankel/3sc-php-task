@@ -13,6 +13,25 @@ class File implements FileInterface {
     private $createdTime;
     private $modifiedTime;
     private $parentDirectory;
+    private $gifRefrence;
+
+    public function setGifRefrence($diskPath){
+        $this->gifRefrence = $diskPath;
+        $this->setModifiedTime(new \DateTime());
+    }
+
+    public function getGifRefrence(){
+        return $this->gifRefrence;
+    }
+
+    public function viewGif(){
+        if(file_exists($this->gifRefrence)){
+            echo  $this->gifRefrence . " it exists";
+            $url=$this->gifRefrence;
+            $cmd=sprintf( 'start %s',$url );
+            exec( $cmd );
+        }
+    }
 
     public function deleteFile(){
         $this->parentDirectory->removeFile($this);
@@ -86,9 +105,4 @@ class File implements FileInterface {
 
 }
 
-//For Testing
-//$testObject = new File();
-//$testObject->setName("Steve");
-//$newName = $testObject->getName();
-//echo $newName;
 ?>
