@@ -20,6 +20,7 @@ class File implements FileInterface {
         if(file_exists($diskPath)){
             $this->gifRefrence = $diskPath;
             $this->setModifiedTime(new \DateTime());
+            $this->setSize(filesize($gifRefrence));
         }else{
             echo "refrence path does not lead to a real file : " . $diskPath;
         }

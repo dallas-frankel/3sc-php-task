@@ -203,7 +203,7 @@ function changeFileRef($fileName,$newPath){
  
   $file = findFileWithName($fileName);
   if($file != null){
-    $fileSystem->changeFileRef($file, $imageDirectory . $newPath);
+    $fileSystem->changeFileRef($file, $imagesFilePath . $newPath);
   }else{
     echo "File with this name doesn't exist in the current directory";
   }
@@ -227,7 +227,7 @@ function fileProperties($fileName){
     echo "------";
     echo "\nFile Properties for " . $fileName;
     echo "\nPath: " . $fileSystem->getFilePath($file);
-    echo "\nSize: " . $fileSystem->getFileSize($file);
+    echo "\nSize: " . $fileSystem->getFileSize($file) . " Bytes";
     echo "\nCreatedTime: " . $fileSystem->getFileCreationTime($file);
     echo "\nModifiedTime: " . $fileSystem->getFileModifiedTime($file);
     echo "\n------";
@@ -244,7 +244,7 @@ function directoryProperties($directoryName){
     echo "------";
     echo "\nDirectory Properties for " . $directoryName;
     echo "\nPath: " . $directory->getPath();
-    echo "\nSize: " . $fileSystem->getDirectorySize($directory);
+    echo "\nSize: " . $fileSystem->getDirectorySize($directory) . " Bytes";
     echo "\nCreatedTime: " . $directory->getCreatedTime();
     echo "\n------";
   }else{
