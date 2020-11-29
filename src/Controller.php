@@ -156,7 +156,7 @@ function start(){
   $fileSystem->createDirectory($catgifs,$rootDirectory);
   $fileSystem->createDirectory($wigglycats,$catgifs);
   $fileSystem->createDirectory($crazycats,$catgifs);
-
+  
   $fileSystem->createFile($flapCat,$crazycats);
   $fileSystem->createFile($wigglycat,$wigglycats);
   $fileSystem->createFile($blackCat,$crazycats);

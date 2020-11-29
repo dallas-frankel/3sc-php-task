@@ -100,6 +100,11 @@ class FileSystemClassTest{
             $bool = false;
         }
 
+        if(!$this -> testChangeFileRef()){
+            echo "testChangeFileRef Failed!";
+            $bool = false;
+        }
+
         if($bool){
             echo "\nAll Tests Returned True";
         }
@@ -327,6 +332,19 @@ class FileSystemClassTest{
         }
 
         return false;
+    }
+
+    public function testChangeFileRef(){
+        $fileSystem = new FileSystem();
+        $testFile = new File("TestFile",$this->baseFilePath . $this->firstCatGif);
+        $fileSystem->changeFileRef($testFile,$this->baseFilePath . $this->firstCatGif);
+        if($testFile->getGifRefrence() == $this->baseFilePath . $this->firstCatGif){
+            return true;
+        }
+        
+        return false;
+        
+
     }
 }
 
