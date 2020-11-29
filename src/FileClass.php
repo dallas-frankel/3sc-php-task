@@ -58,26 +58,26 @@ class File implements FileInterface {
 
 
     public function getCreatedTime(){
-        return $createdTime;
+        return $this->createdTime;
     }
 
     public function setCreatedTime(DateTimeInterface $created){
-        $createdTime = $created;
+        $this->createdTime = $created;
         return $this;
     }
 
 
     public function getModifiedTime(){
-        return $modifiedTime;
+        return $this->modifiedTime;
     }
 
     public function setModifiedTime(DateTimeInterface $modified){
-        $modifiedTime = $modified;
+        $this->modifiedTime = $modified;
         return $this;
     }
 
     public function getPath(){
-        return getParentDirectory()->getPath() . "/" . getName();
+        return $this->getParentDirectory()->getPath() . "/" . $this->getName();
     }
 
 }

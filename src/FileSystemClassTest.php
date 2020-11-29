@@ -65,6 +65,21 @@ class FileSystemClassTest{
             $bool = false;
         }
 
+        if(!$this->testGetFileSize()){
+            echo "testGetFileSize Failed!";
+            $bool = false;
+        }
+
+        if(!$this->testCreationTime()){
+            echo "testCreationTime Failed!";
+            $bool = false;
+        }
+
+        if(!$this->testUpdateFile()){
+            echo "testUpdateFile Failed!";
+            $bool = false;
+        }
+
         if($bool){
             echo "\nAll Tests Returned True";
         }
@@ -217,6 +232,39 @@ class FileSystemClassTest{
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public function testGetFileSize(){
+        $testFile = new File("File1",5);
+        $fileSystem = new FileSystem();
+        if($fileSystem->getFileSize($testFile) == 5){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function testCreationTime(){
+        $dateTime = new \DateTime();
+        $timeNow = $dateTime->format('Y-m-d H:i:s');
+        $testFile = new File("File1",5);
+        $fileSystem = new FileSystem();
+        if($testFile->getCreatedTime()->format('Y-m-d H:i:s') == $timeNow){
+            return true;
+        }
+        return false;      
+    }
+
+    public function testUpdateFile(){
+        $testFile = new File("File1",5);
+        $fileSystem = new FileSystem();
+        $dateTime = new \DateTime();
+        $timeNow = $dateTime->format('Y-m-d H:i:s');
+        $fileSystem->updateFile($testFile);
+        if($timeNow == $testFile->getModifiedTime()->format('Y-m-d H:i:s')){
+            return true;
         }
         return false;
     }
