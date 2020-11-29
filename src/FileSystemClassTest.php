@@ -80,6 +80,16 @@ class FileSystemClassTest{
             $bool = false;
         }
 
+        if(!$this->testDirectorySize()){
+            echo "testDirectorySize Failed!";
+            $bool = false;
+        }
+
+        if(!$this -> testGetFilePath()){
+            echo "testGetFilePath Failed!";
+            $bool = false;
+        }
+
         if($bool){
             echo "\nAll Tests Returned True";
         }
@@ -251,6 +261,7 @@ class FileSystemClassTest{
         $timeNow = $dateTime->format('Y-m-d H:i:s');
         $testFile = new File("File1",5);
         $fileSystem = new FileSystem();
+        //Checks if file time is set to time now
         if($testFile->getCreatedTime()->format('Y-m-d H:i:s') == $timeNow){
             return true;
         }
@@ -263,9 +274,48 @@ class FileSystemClassTest{
         $dateTime = new \DateTime();
         $timeNow = $dateTime->format('Y-m-d H:i:s');
         $fileSystem->updateFile($testFile);
-        if($timeNow == $testFile->getModifiedTime()->format('Y-m-d H:i:s')){
+        //Checks if file time is set to time now
+        if($timeNow == $fileSystem->getFileModifiedTime($testFile)->format('Y-m-d H:i:s')){
             return true;
         }
+        return false;
+    }
+
+    public function testDirectorySize(){
+        $testFile = new File("File1",5);
+        $testFile2 = new File("File1",5);
+        $testDirectory = new Directory("TopFolder");
+        $testDirectory2 = new Directory("MiddleFolder");
+        $testDirectory3 = new Directory("BottomFolder");
+        $fileSystem = new FileSystem();
+        //Makes a chain of directories and files to test with
+        $fileSystem->createDirectory($testDirectory2,$testDirectory);
+        $fileSystem->createDirectory($testDirectory3,$testDirectory2);
+        $fileSystem->createFile($testFile, $testDirectory);
+        $fileSystem->createFile($testFile2, $testDirectory);
+        $fileSystem->createFile($testFile, $testDirectory2);
+        $fileSystem->createFile($testFile, $testDirectory3);
+
+        if($fileSystem->getDirectorySize($testDirectory) == 20){
+            return true;
+        }
+        return false;
+    }
+
+    public function testGetFilePath(){
+        $fileSystem = new FileSystem();
+        $testDirectory = new Directory("TopFolder");
+        $testDirectory2 = new Directory("MiddleFolder");
+        $testDirectory3 = new Directory("BottomFolder");
+        $testFile = new File("TestFile",5);
+        $fileSystem->createDirectory($testDirectory2,$testDirectory);
+        $fileSystem->createDirectory($testDirectory3,$testDirectory2);
+        $fileSystem->createFile($testFile, $testDirectory3);
+        echo $fileSystem->getFilePath($testFile);
+        if($fileSystem->getFilePath($testFile) == "TopFolder/MiddleFolder/BottomFolder/TestFile"){
+            return true;
+        }
+
         return false;
     }
 }

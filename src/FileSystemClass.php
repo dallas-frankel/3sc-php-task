@@ -23,6 +23,10 @@ class FileSystem implements FileSystemInterface
   public function getFileModifiedTime($file){
     return $file->getModifiedTime();
   }
+
+  public function getFilePath($file){
+    return $file->getPath();
+  }
   
 
   //Interface Methods
