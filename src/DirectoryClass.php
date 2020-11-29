@@ -86,7 +86,7 @@ class Directory implements DirectoryInterface
   //Checks if name appears in directories
   public function checkForNameInDirectories($name){
     for($i = 0; $i < count($this->directories);$i++){
-      if($this->directories[$i] == $name){
+      if(strtolower($this->directories[$i]->getName()) == strtolower ($name)){
         return true;
       } 
     }
@@ -95,7 +95,7 @@ class Directory implements DirectoryInterface
 
   public function checkForNameInFiles($name){
     for($i = 0; $i < count($this->files);$i++){
-      if($this->files[$i] == $name){
+      if(strtolower($this->files[$i]->getName()) == strtolower($name)){
         return true;
       } 
     }

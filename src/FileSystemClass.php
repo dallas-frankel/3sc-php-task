@@ -74,6 +74,7 @@ class FileSystem implements FileSystemInterface
   
   public function renameDirectory(DirectoryInterface $directory, $newName){
     //checks if name already exists in parent directory and modifies if true
+    //echo "\n" . $directory->getParentDirectory()->getName() . " what";
     if($directory->getParentDirectory() != null){
       if($directory->getParentDirectory()->checkForNameInDirectories($newName)){
         $newName = $newName . "(1)";

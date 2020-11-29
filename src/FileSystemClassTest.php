@@ -45,6 +45,11 @@ class FileSystemClassTest{
             $bool = false;
         }
 
+        if(!$this->testRenameDuplicate()){
+            echo "testRenameDuplicate Failed!";
+            $bool = false;
+        }
+
         if($bool){
             echo "\nAll Tests Returned True";
         }
@@ -133,7 +138,23 @@ class FileSystemClassTest{
             return false;
         }
       }
-    
+
+      public function testRenameDuplicate(){
+        $testDirectory2 = new Directory("BottomFolder");
+        $testDirectory = new Directory("TopFolder");
+        $testDirectory3 = new Directory("OtherFolder");
+        $fileSystem = new FileSystem();
+        $fileSystem->createDirectory($testDirectory2,$testDirectory);
+        $fileSystem->createDirectory($testDirectory3,$testDirectory);
+        $fileSystem->renameDirectory($testDirectory3,"BottomFolder");
+
+        if($testDirectory3->getName() == "BottomFolder(1)"){
+            return true;
+        }else{
+            return false;
+        }
+      }
+    //Test duplicate name
     
 }
 
