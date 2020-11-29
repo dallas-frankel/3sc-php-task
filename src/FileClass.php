@@ -38,11 +38,17 @@ class File implements FileInterface {
         $this->parentDirectory = null;
     }
 
-    public function __construct($name,$size){
-        $this->setName($name);
-        $this->setSize($size);
-        //sets created date and time to currentTime
-        $this->setCreatedTime(new \DateTime());
+    public function __construct($name,$gifRefrence){
+        if(file_exists($gifRefrence)){
+            $this->setName($name);
+            $this->setSize(filesize($gifRefrence));
+            $this->setGifRefrence($gifRefrence);
+            //sets created date and time to currentTime
+            $this->setCreatedTime(new \DateTime());
+        }else{
+            echo "File Creation Failed, Path (". $gifRefrence .") doesn't exist";
+        }
+        
     }
 
     public function getParentDirectory(){

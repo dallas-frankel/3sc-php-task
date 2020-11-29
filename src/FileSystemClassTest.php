@@ -10,6 +10,11 @@ require_once('FileClass.php');
 
 class FileSystemClassTest{
 
+    private $baseFilePath = "C:/xampp/htdocs/3sc";
+    private $firstCatGif = "/images/cat_1.gif";
+    private $secondCatGif = "/images/cat_2.gif";
+    private $thirdCatGif = "/images/cat_3.gif";
+
     public function runTests(){
         $bool = true;
         if(!$this->testRenameFile()){
@@ -96,7 +101,7 @@ class FileSystemClassTest{
     }
 
     public function testRenameFile(){
-        $testFile = new File("File1",1);
+        $testFile = new File("File1",$this->baseFilePath . $this->firstCatGif);
         $fileSystem = new FileSystem();
         $fileSystem->renameFile($testFile,"File2");
         if($testFile->getName() == "File2"){
@@ -107,7 +112,7 @@ class FileSystemClassTest{
     }
 
     public function testCreateFile(){
-        $testFile = new File("File1",1);
+        $testFile = new File("File1",$this->baseFilePath . $this->firstCatGif);
         $testDirectory = new Directory("Folder1");
         $fileSystem = new FileSystem();
         $fileSystem->createFile($testFile,$testDirectory);
@@ -122,7 +127,7 @@ class FileSystemClassTest{
     }
 
     public function testDeleteFile(){
-        $testFile = new File("File1",1);
+        $testFile = new File("File1",$this->baseFilePath . $this->firstCatGif);
         $testDirectory = new Directory("Folder1");
         $fileSystem = new FileSystem();
         $fileSystem->createFile($testFile,$testDirectory);
@@ -197,8 +202,8 @@ class FileSystemClassTest{
 
       public function testRenameDuplicateFile(){
         $testDirectory = new Directory("BottomFolder");
-        $testFile = new File("MyFile",5);
-        $testFile2 = new File("MyFile1",5); 
+        $testFile = new File("MyFile",$this->baseFilePath . $this->firstCatGif);
+        $testFile2 = new File("MyFile1",$this->baseFilePath . $this->firstCatGif); 
         $fileSystem = new FileSystem();
         $fileSystem->createFile($testFile,$testDirectory);
         $fileSystem->createFile($testFile2,$testDirectory);
@@ -212,8 +217,8 @@ class FileSystemClassTest{
       }
 
       public function testCreateFileDuplicate(){
-        $testFile = new File("File1",1);
-        $testFile2 = new File("File1",1);
+        $testFile = new File("File1",$this->baseFilePath . $this->firstCatGif);
+        $testFile2 = new File("File1",$this->baseFilePath . $this->firstCatGif);
         $testDirectory = new Directory("Folder1");
         $fileSystem = new FileSystem();
         $fileSystem->createFile($testFile,$testDirectory);
@@ -247,9 +252,9 @@ class FileSystemClassTest{
     }
 
     public function testGetFileSize(){
-        $testFile = new File("File1",5);
+        $testFile = new File("File1",$this->baseFilePath . $this->firstCatGif);
         $fileSystem = new FileSystem();
-        if($fileSystem->getFileSize($testFile) == 5){
+        if($fileSystem->getFileSize($testFile) == filesize($this->baseFilePath . $this->firstCatGif)){
             return true;
         }
 
@@ -259,7 +264,7 @@ class FileSystemClassTest{
     public function testCreationTime(){
         $dateTime = new \DateTime();
         $timeNow = $dateTime->format('Y-m-d H:i:s');
-        $testFile = new File("File1",5);
+        $testFile = new File("File1",$this->baseFilePath . $this->firstCatGif);
         $fileSystem = new FileSystem();
         //Checks if file time is set to time now
         if($testFile->getCreatedTime() == $timeNow){
@@ -269,7 +274,7 @@ class FileSystemClassTest{
     }
 
     public function testUpdateFile(){
-        $testFile = new File("File1",5);
+        $testFile = new File("File1",$this->baseFilePath . $this->firstCatGif);
         $fileSystem = new FileSystem();
         $dateTime = new \DateTime();
         $timeNow = $dateTime->format('Y-m-d H:i:s');
@@ -282,8 +287,8 @@ class FileSystemClassTest{
     }
 
     public function testDirectorySize(){
-        $testFile = new File("File1",5);
-        $testFile2 = new File("File1",5);
+        $testFile = new File("File1",$this->baseFilePath . $this->firstCatGif);
+        $testFile2 = new File("File1",$this->baseFilePath . $this->firstCatGif);
         $testDirectory = new Directory("TopFolder");
         $testDirectory2 = new Directory("MiddleFolder");
         $testDirectory3 = new Directory("BottomFolder");
@@ -296,7 +301,8 @@ class FileSystemClassTest{
         $fileSystem->createFile($testFile, $testDirectory2);
         $fileSystem->createFile($testFile, $testDirectory3);
 
-        if($fileSystem->getDirectorySize($testDirectory) == 20){
+        $sizeOfAllFiles = $testFile->getSize() * 4;
+        if($fileSystem->getDirectorySize($testDirectory) == $sizeOfAllFiles){
             return true;
         }
         return false;
@@ -307,11 +313,10 @@ class FileSystemClassTest{
         $testDirectory = new Directory("TopFolder");
         $testDirectory2 = new Directory("MiddleFolder");
         $testDirectory3 = new Directory("BottomFolder");
-        $testFile = new File("TestFile",5);
+        $testFile = new File("TestFile",$this->baseFilePath . $this->firstCatGif);
         $fileSystem->createDirectory($testDirectory2,$testDirectory);
         $fileSystem->createDirectory($testDirectory3,$testDirectory2);
         $fileSystem->createFile($testFile, $testDirectory3);
-        echo $fileSystem->getFilePath($testFile);
         if($fileSystem->getFilePath($testFile) == "TopFolder/MiddleFolder/BottomFolder/TestFile"){
             return true;
         }
