@@ -50,6 +50,16 @@ class FileSystemClassTest{
             $bool = false;
         }
 
+        if(!$this->testRenameDuplicateFile()){
+            echo "testRenameDuplicateFile Failed!";
+            $bool = false;
+        }
+        
+        if(!$this->testCreateFileDuplicate()){
+            echo "testCreateFileDuplicate Failed!";
+            $bool = false;
+        }
+
         if($bool){
             echo "\nAll Tests Returned True";
         }
@@ -154,6 +164,41 @@ class FileSystemClassTest{
             return false;
         }
       }
+
+      public function testRenameDuplicateFile(){
+        $testDirectory = new Directory("BottomFolder");
+        $testFile = new File("MyFile",5);
+        $testFile2 = new File("MyFile1",5); 
+        $fileSystem = new FileSystem();
+        $fileSystem->createFile($testFile,$testDirectory);
+        $fileSystem->createFile($testFile2,$testDirectory);
+        $fileSystem->renameFile($testFile2,"MyFile");
+
+        if($testFile2->getName() == "MyFile(1)"){
+            return true;
+        }else{
+            return false;
+        }
+      }
+
+      public function testCreateFileDuplicate(){
+        $testFile = new File("File1",1);
+        $testFile2 = new File("File1",1);
+        $testDirectory = new Directory("Folder1");
+        $fileSystem = new FileSystem();
+        $fileSystem->createFile($testFile,$testDirectory);
+        $fileSystem->createFile($testFile2,$testDirectory);
+        if($testFile2->getParentDirectory() == $testDirectory){
+            if($testDirectory->getFiles()[1] != null){
+                if($testDirectory->getFiles()[1] == $testFile2){
+                    if($testFile2->getName() == "File1(1)")
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
     //Test duplicate name
     
 }
