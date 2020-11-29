@@ -7,14 +7,19 @@ use PHPUnit\Framework\TestCase;
 require_once('FileSystemClass.php');
 require_once('DirectoryClass.php');
 require_once('FileClass.php');
-
 class FileSystemClassTest{
 
-    private $baseFilePath = "C:/xampp/htdocs/3sc";
-    private $firstCatGif = "/images/cat_1.gif";
-    private $secondCatGif = "/images/cat_2.gif";
-    private $thirdCatGif = "/images/cat_3.gif";
-
+    private $baseFilePath = "C:/xampp/htdocs/3sc/images/";
+    private $firstCatGif = "\cat_1.gif";
+    private $secondCatGif = "\cat_2.gif";
+    private $thirdCatGif = "\cat_3.gif";
+    
+    public function start(){
+        //Gets the current \src file path and changes it to \images
+        $this->baseFilePath = dirname(getcwd()) . '\images';
+        $this->runTests();
+    }
+    
     public function runTests(){
         $bool = true;
         if(!$this->testRenameFile()){
@@ -326,4 +331,4 @@ class FileSystemClassTest{
 }
 
 $testClass = new FileSystemClassTest();
-$testClass->runTests();
+$testClass->start();
