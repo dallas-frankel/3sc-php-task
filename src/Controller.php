@@ -33,6 +33,7 @@ $currentDirectory;
 
 
 function turnInputIntoWordArray($line){
+  //Removes all spaces and adds each work into the array
   return explode(" ",strtolower($line));
 }
 
@@ -45,14 +46,14 @@ function menu(){
   $wordArray = turnInputIntoWordArray(trim($line));
   if(count($wordArray) > 0){
     switch ($wordArray[0]) {
-      case "cd":
+      case "moveto":
           if(count($wordArray) > 1){
             changeDirectory($wordArray[1]);
           }else{
-            echo "\nPlease use command as 'cd <DirectoryName>'";
+            echo "\nPlease use command as 'moveto <DirectoryName>'";
           }
           menu();
-      case "back":
+      case "moveup":
         back();
       case "renamefile":
           if(count($wordArray) > 2){
@@ -61,16 +62,16 @@ function menu(){
             echo "\nPlease use command as 'renamefile <FileName> <NewFileName>'";
           }
           menu();
-      case "renamedir":
+      case "renamedirectory":
           if(count($wordArray) > 2){
-            //renameDirectory($wordArray[1]);
+            renameDirectory($wordArray[1],$wordArray[2]);
           }else{
             echo "\nPlease use command as 'renamedir <DirectoryName> <NewDirectoryName>'";
           }
           menu();
       case "fileproperties":
           if(count($wordArray) > 1){
-            //getproperties($wordArray[1]);
+            fileProperties($wordArray[1]);
           }else{
             echo "\nPlease use command as 'properties <FileName>'";
           }
@@ -85,14 +86,17 @@ function menu(){
       case "quit":
         exit;
       case "help":
-          echo "\n'cd <DirectoryName>'                          : Change Directroy";
-          echo "\n'back'                                        : Go Up One DirectoryLevel";
-          echo "\n'renamefile <FileName> <NewFileName>'         : Rename a File:";
+          echo "\n'moveto <DirectoryName>'                      : Change Directroy";
+          echo "\n'moveup'                                      : Go Up One DirectoryLevel";
+          echo "\n'renamefile <FileName> <NewFileName>'         : Rename a File";
           echo "\n'renamedir <DirectoryName> <NewDirectoryName>': Rename a Directory";
           echo "\n'fileproperties <FileName>'                   : Show File Properties";
-          echo "\n'quit'                                        : StopExecution";    
+          echo "\n'quit'                                        : Stop Execution";    
           echo "\n'help'                                        : Get a list of commands";             
           menu();
+      default:
+        echo "Command was not recognised";
+        menu();
     }
   }
   fclose($handle);
@@ -113,12 +117,46 @@ function back(){
     echo "Already at top directory";
   }
 }
+function fileProperties($fileName){
+  global $fileSystem;
+  $file = findFileWithName($fileName);
+  if($file != null){
+    echo "------";
+    echo "\nFile Properties for " . $fileName;
+    echo "\nPath: " . $fileSystem->getFilePath($file);
+    echo "\nSize: " . $fileSystem->getFileSize($file);
+    echo "\nCreatedTime: " . $fileSystem->getFileCreationTime($file);
+    echo "\nModifiedTime: " . $fileSystem->getFileModifiedTime($file);
+    echo "\n------";
+  }else{
+    echo "File with this name doesn't exist in the current directory";
+  }
+}
+function deleteFile($fileName){
+  global $fileSystem;
+  $file = findFileWithName($fileName);
+  if($file != null){
+    $fileSystem->deleteFile($file);
+  }else{
+    echo "File with this name doesn't exist in the current directory";
+  }
+}
 
 function renameFile($fileName,$newFileName){
   global $fileSystem;
   $file = findFileWithName($fileName);
   if($file != null){
     $fileSystem->renameFile($file,$newFileName);
+  }else{
+    echo "File with this name doesn't exist in the current directory";
+  }
+}
+
+function renameDirectory($directoryName,$newDirectoryName){
+  global $fileSystem;
+  $directory = findDirectoryWithName($directoryName);
+  if($directory != null){
+    $fileSystem->renameDirectory($directory,$newDirectoryName);
   }else{
     echo "File with this name doesn't exist in the current directory";
   }
@@ -140,7 +178,6 @@ function findFileWithName($name){
   $myfile = null;
   for($i= 0; $i < count($fileSystem->getFiles($currentDirectory));$i++){
     if(strtolower($fileSystem->getFiles($currentDirectory)[$i]->getName()) == $name){
-      echo "file with name found";
       $myfile = $fileSystem->getFiles($currentDirectory)[$i]; 
     }
   }
@@ -162,7 +199,7 @@ function findDirectoryWithName($name){
 
 function printDirectoryContents(){
   global $currentDirectory;
-  echo "\nViewing " . $currentDirectory->getName() . " Folder";
+  echo "\nViewing " . $currentDirectory->getPath() . " Folder";
   echo "\nFolders:";
   listCurrentDirectories();
   echo "\n\nFiles:";

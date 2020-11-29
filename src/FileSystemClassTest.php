@@ -262,7 +262,7 @@ class FileSystemClassTest{
         $testFile = new File("File1",5);
         $fileSystem = new FileSystem();
         //Checks if file time is set to time now
-        if($testFile->getCreatedTime()->format('Y-m-d H:i:s') == $timeNow){
+        if($testFile->getCreatedTime() == $timeNow){
             return true;
         }
         return false;      
@@ -275,7 +275,7 @@ class FileSystemClassTest{
         $timeNow = $dateTime->format('Y-m-d H:i:s');
         $fileSystem->updateFile($testFile);
         //Checks if file time is set to time now
-        if($timeNow == $fileSystem->getFileModifiedTime($testFile)->format('Y-m-d H:i:s')){
+        if($timeNow == $fileSystem->getFileModifiedTime($testFile)){
             return true;
         }
         return false;

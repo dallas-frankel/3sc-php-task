@@ -58,6 +58,7 @@ class FileSystem implements FileSystemInterface
 
   public function createRootDirectory(DirectoryInterface $directory){
     $this->rootDirectory = $directory;
+    $directory->setPath(null);
   }
 
   public function createDirectory(DirectoryInterface $directory, DirectoryInterface $parent){
@@ -108,7 +109,6 @@ class FileSystem implements FileSystemInterface
   }
 
   public function getFiles(DirectoryInterface $directory){
-    echo "\nGet fules in system class" . count($directory->getFiles()) . "\n";
     return $directory->getFiles();
   }
 }

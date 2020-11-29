@@ -58,7 +58,7 @@ class File implements FileInterface {
 
 
     public function getCreatedTime(){
-        return $this->createdTime;
+        return $this->createdTime->format('Y-m-d H:i:s');
     }
 
     public function setCreatedTime(DateTimeInterface $created){
@@ -68,7 +68,11 @@ class File implements FileInterface {
 
 
     public function getModifiedTime(){
-        return $this->modifiedTime;
+        if($this->modifiedTime != null){
+            return $this->modifiedTime->format('Y-m-d H:i:s');
+        }else{
+            return $this->getCreatedTime();
+        }
     }
 
     public function setModifiedTime(DateTimeInterface $modified){
