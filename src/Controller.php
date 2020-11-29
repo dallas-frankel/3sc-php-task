@@ -6,28 +6,7 @@ require_once('FileSystemClass.php');
 require_once('DirectoryClass.php');
 require_once('FileClass.php');
 
-$fileSystem = new FileSystem();
-$rootDirectory = new Directory("Root");
-$baseDirectory = new Directory("Folder1");
-$base2Directory = new Directory("Folder2");
-$baseChildDirectory = new Directory("baseChildDirectory");
-$baseChildFile = new File("File1",1);
-
-
-$fileSystem->createRootDirectory($rootDirectory);
-$fileSystem->createDirectory($baseDirectory,$rootDirectory);
-$fileSystem->createDirectory($base2Directory,$rootDirectory);
-//$fileSystem->createDirectory($baseChildDirectory,$baseDirectory);
-$fileSystem->createFile($baseChildFile,$rootDirectory);
-//$fileSystem->createFile($baseChildFile,$baseDirectory);
-//$fileSystem->createFile($baseChildFile,$rootDirectory);
-//$fileSystem->createFile($baseChildFile,$base2Directory);
-//$fileSystem->createFile($baseChildFile,$base2Directory);
-
-
-
-//$hello = $fileSystem->getDirectorySize($rootDirectory);
-//$fileSystem->getFiles($baseDirectory);
+$fileSystem;
 
 $currentDirectory;
 
@@ -37,6 +16,7 @@ function turnInputIntoWordArray($line){
 }
 
 
+//Allows users to enter commands from the command line, it will wait for the input
 function menu(){
   printDirectoryContents();
   echo "\nPlease enter a command (Type 'help' for a list of commands): ";
@@ -44,6 +24,7 @@ function menu(){
   $line = fgets($handle);
   $wordArray = turnInputIntoWordArray(trim($line));
   if(count($wordArray) > 0){
+    //associates first word to a known command
     switch ($wordArray[0]) {
       case "moveto":
           if(count($wordArray) > 1){
@@ -72,58 +53,74 @@ function menu(){
           if(count($wordArray) > 1){
             fileProperties($wordArray[1]);
           }else{
-            echo "\nPlease use command as 'properties <FileName>'";
+            echo "\nPlease use command as 'fileproperties <FileName>'";
           }
         menu();
       case "directoryproperties":
           if(count($wordArray) > 1){
             directoryproperties($wordArray[1]);
           }else{
-            echo "\nPlease use command as 'properties <FileName>'";
+            echo "\nPlease use command as 'directoryproperties <DirectoryName>'";
           }
         menu();
       case "deletefile":
           if(count($wordArray) > 1){
             deleteFile($wordArray[1]);
           }else{
-            echo "\nPlease use command as 'properties <FileName>'";
+            echo "\nPlease use command as 'deletefile <FileName>'";
           }
         menu();
       case "deletedirectory":
           if(count($wordArray) > 1){
             deleteDirectory($wordArray[1]);
           }else{
-            echo "\nPlease use command as 'properties <FileName>'";
+            echo "\nPlease use command as 'deletedirectory <DirectoryName>'";
           }
+        menu();
+      case "createfile":
+        if(count($wordArray) > 2){
+          createFile($wordArray[1],$wordArray[2]);
+        }else{
+          echo "\nPlease use command as 'createfile <FileName> <Path From /images/>'";
+        }
+        menu();
+      case "createdirectory":
+        if(count($wordArray) > 1){
+          createDirectory($wordArray[1]);
+        }else{
+          echo "\nPlease use command as 'createfile <FileName> <Path From /images/>'";
+        }
         menu();
       case "viewfile":
         if(count($wordArray) > 1){
           viewFile($wordArray[1]);
         }else{
-          echo "\nPlease use command as 'properties <FileName>'";
+          echo "\nPlease use command as 'viewfile <FileName>'";
         }
         menu();
       case "changefileref":
         if(count($wordArray) > 2){
            changeFileRef($wordArray[1],$wordArray[2]);
         }else{
-          echo "\nPlease use command as 'properties <FileName>'";
+          echo "\nPlease use command as 'changefileref <Path From /images>'";
         }
-          menu();
+        menu();
       case "quit":
         exit;
       case "help":
-          echo "\n'moveto <DirectoryName>'                      : Change Directroy";
-          echo "\n'moveup'                                      : Go Up One DirectoryLevel";
-          echo "\n'renamefile <FileName> <NewFileName>'         : Rename a File";
-          echo "\n'renamedir <DirectoryName> <NewDirectoryName>': Rename a Directory";
-          echo "\n'fileproperties <FileName>'                   : Show File Properties";
-          echo "\n'directoryproperties <DirectoryName>'         : Show Directory Properties";
-          echo "\n'deletefile <FileName>'                       : Deletes a File";
-          echo "\n'deletedirectory <DirectoryName>'             : Deletes a Directory";
-          echo "\n'changefileref <FileName> <LocalFilePath>'    : Changes the Gif associated with the file";
-          echo "\n'quit'                                        : Stop Execution";    
-          echo "\n'help'                                        : Get a list of commands";             
+          echo "\n'moveto <DirectoryName>'                           : Change Directroy";
+          echo "\n'moveup'                                           : Go Up One DirectoryLevel";
+          echo "\n'renamefile <FileName> <NewFileName>'              : Rename a File";
+          echo "\n'renamedir <DirectoryName> <NewDirectoryName>'     : Rename a Directory";
+          echo "\n'fileproperties <FileName>'                        : Show File Properties";
+          echo "\n'directoryproperties <DirectoryName>'              : Show Directory Properties";
+          echo "\n'deletefile <FileName>'                            : Deletes a File";
+          echo "\n'deletedirectory <DirectoryName>'                  : Deletes a Directory";
+          echo "\n'createfile <FileName> <Path From /images/>'       : Creates a new file";
+          echo "\n'createdirectory <DirectoryName> '                 : Creates a new file";
+          echo "\n'changefileref <FileName> <Path From /images/>'    : Changes the Gif associated with the file";
+          echo "\n'quit'                                             : Stop Execution";    
+          echo "\n'help'                                             : Get a list of commands";             
           menu();
       default:
         echo "Command was not recognised";
@@ -134,10 +131,39 @@ function menu(){
   echo "Quitting";
 }
 
+$imagesFilePath;
 
-function start($rootDirectory){
+function start(){
   global $currentDirectory;
+  global $imagesFilePath;
+  global $fileSystem;
+  //Gets current /src path and moves it to /images
+  $imagesFilePath = dirname(getcwd()) . "\images\\";
+
+  //Creation of objects;
+  $fileSystem = new FileSystem();
+  $rootDirectory = new Directory("Root");
+  $catgifs = new Directory("CatGifs");
+  $wigglycats = new Directory("WigglyCats");
+  $crazycats = new Directory("CrazyCats");
+
+  $flapCat = new File("CatStuckInFlap.gif",$imagesFilePath . "cat_1.gif");
+  $wigglycat = new File("wigglycat.gif",$imagesFilePath . "cat_2.gif");
+  $blackCat = new File("blackcat.gif",$imagesFilePath . "cat_3.gif");
+  
+  //Connecting Files and directories in the fileSystem
+  $fileSystem->createRootDirectory($rootDirectory);
+  $fileSystem->createDirectory($catgifs,$rootDirectory);
+  $fileSystem->createDirectory($wigglycats,$catgifs);
+  $fileSystem->createDirectory($crazycats,$catgifs);
+
+  $fileSystem->createFile($flapCat,$crazycats);
+  $fileSystem->createFile($wigglycat,$wigglycats);
+  $fileSystem->createFile($blackCat,$crazycats);
+
   $currentDirectory = $rootDirectory;
+
+  
   menu();
 }
 
@@ -152,11 +178,32 @@ function viewFile($fileName){
   }
 }
 
+function createDirectory($directoryName){
+  global $fileSystem;
+  global $currentDirectory;
+  $newDirectory = new Directory($directoryName);
+  $fileSystem->createDirectory($newDirectory,$currentDirectory);
+}
+
+function createFile($fileName, $gifname){
+  global $fileSystem;
+  global $imagesFilePath;
+  global $currentDirectory;
+  $newFile = new File($fileName,$imagesFilePath . $gifname);
+  if($newFile != null){
+    $fileSystem->createFile($newFile,$currentDirectory);
+  }else{
+    echo "couldn't create file";
+  }
+}
+
 function changeFileRef($fileName,$newPath){
   global $fileSystem;
+  global $imagesFilePath;
+ 
   $file = findFileWithName($fileName);
   if($file != null){
-    $fileSystem->changeFileRef($file,$newPath);
+    $fileSystem->changeFileRef($file, $imageDirectory . $newPath);
   }else{
     echo "File with this name doesn't exist in the current directory";
   }
@@ -189,6 +236,7 @@ function fileProperties($fileName){
   }
 }
 
+//Displays directory properties
 function directoryProperties($directoryName){
   global $fileSystem;
   $directory = findDirectoryWithName($directoryName);
@@ -204,6 +252,7 @@ function directoryProperties($directoryName){
   }
 }
 
+//Deletes directory
 function deleteDirectory($directoryName){
   global $fileSystem;
   $directory = findDirectoryWithName($directoryName);
@@ -214,6 +263,7 @@ function deleteDirectory($directoryName){
   }
 }
 
+//Delets a file
 function deleteFile($fileName){
   global $fileSystem;
   $file = findFileWithName($fileName);
@@ -254,6 +304,7 @@ function changeDirectory($name){
   }
 }
 
+//returns a file object from name using the current directory
 function findFileWithName($name){
   global $currentDirectory;
   global $fileSystem;
@@ -266,6 +317,7 @@ function findFileWithName($name){
   return $myfile;
 }
 
+//returns a directory object from name using the current directory
 function findDirectoryWithName($name){
   global $currentDirectory;
   global $fileSystem;
@@ -278,7 +330,7 @@ function findDirectoryWithName($name){
   return $directory;
 }
 
-
+//Displays the Folders and Files in the current directory
 function printDirectoryContents(){
   global $currentDirectory;
   echo "\nViewing " . $currentDirectory->getPath() . " Folder";
@@ -288,6 +340,7 @@ function printDirectoryContents(){
   listCurrentFiles();
 }
 
+//Lists the files in the current directory
 function listCurrentFiles(){
 //modify to print files in a line??
 global $currentDirectory;
@@ -298,6 +351,7 @@ global $fileSystem;
     echo "\n " . $line;
   }
 }
+//Lists the directories in the current directory
 function listCurrentDirectories(){
   global $currentDirectory;
   global $fileSystem;
@@ -306,7 +360,6 @@ function listCurrentDirectories(){
     echo "\n ".$line;
   }
 }
-$currentDirectory = $rootDirectory;
 //findFileWithName("File1");
-start($rootDirectory);
+start();
 ?>

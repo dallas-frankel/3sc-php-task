@@ -15,21 +15,30 @@ class File implements FileInterface {
     private $parentDirectory;
     private $gifRefrence;
 
+    //sets the path to where the gif is stored on the disk
     public function setGifRefrence($diskPath){
-        $this->gifRefrence = $diskPath;
-        $this->setModifiedTime(new \DateTime());
+        if(file_exists($diskPath)){
+            $this->gifRefrence = $diskPath;
+            $this->setModifiedTime(new \DateTime());
+        }else{
+            echo "refrence path does not lead to a real file : " . $diskPath;
+        }
     }
 
+    //gets the path to where the gif is stored on the disk
     public function getGifRefrence(){
         return $this->gifRefrence;
     }
 
+    //opens the gif at the path in the web browser
     public function viewGif(){
         if(file_exists($this->gifRefrence)){
             echo  $this->gifRefrence . " it exists";
             $url=$this->gifRefrence;
             $cmd=sprintf( 'start %s',$url );
             exec( $cmd );
+        }else{
+            echo "refrence path does not lead to a real file";
         }
     }
 
