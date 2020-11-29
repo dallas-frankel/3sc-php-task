@@ -60,6 +60,11 @@ class FileSystemClassTest{
             $bool = false;
         }
 
+        if(!$this->testCreateDirectoryDuplicate()){
+            echo "testCreateDirectoryDuplicate Failed!";
+            $bool = false;
+        }
+
         if($bool){
             echo "\nAll Tests Returned True";
         }
@@ -199,8 +204,22 @@ class FileSystemClassTest{
         return false;
     }
 
-    //Test duplicate name
-    
+    public function testCreateDirectoryDuplicate(){
+        $testDirectory = new Directory("TopFolder");
+        $testDirectory2 = new Directory("BottomFolder");
+        $testDirectory3 = new Directory("BottomFolder");
+        $fileSystem = new FileSystem();
+        $fileSystem->createDirectory($testDirectory2,$testDirectory);
+        $fileSystem->createDirectory($testDirectory3,$testDirectory);
+        if($testDirectory->getDirectories()[1] == $testDirectory3){
+            if($testDirectory3->getParentDirectory() == $testDirectory){
+                if($testDirectory3->getName() == "BottomFolder(1)"){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
 
 $testClass = new FileSystemClassTest();
